@@ -1,5 +1,5 @@
 Arduino intervalometer / time-lapse dolly v. 0.1
-====================================================
+================================================
 
 This is an Arduino based project. The goal is to create simple yet usable intervalometer and motor controlled dolly.
 
@@ -11,6 +11,10 @@ Hardware needed
 
 - Coming later...
 - Wiring diagrams coming soon...
+
+Videos
+
+- First intervalometer prototype running version 0.1 code: http://www.youtube.com/watch?v=Y-RKiF_JtFg
 
 author: Olli-Pekka Heinisuo
 www: http://unknownpixels.com
