@@ -6,6 +6,8 @@
 bool exposing = false;
 int c,s,t,r,e,b = 0;
 int interval;
+int state;
+int divi;
 unsigned long time = 0;
 
 // These pins are for an common anode 2-digit 7 segment display in multiplexing mode (9 pins, 7 cathodes and 2 common anodes)
@@ -319,6 +321,7 @@ void loop() {
   
 if (r == 1 ) {
 
+digitalWrite(CAMERA_PIN, LOW);
 t = 0;
 s = 0;
 r = 0;
@@ -354,19 +357,28 @@ if (s == 1) {
 
 if (t == 0) {
 interval = e*1000 + b*100;  // turning the display values into milliseconds, max value being 9900 ms (9,9 seconds)
+divi = 10;                   // pulse length divider
 }
 else if (t == 1) {
 interval = e*10000 + b*1000; // full seconds, values from 0 to 99 seconds accepted
+divi = 20;                    // pulse length divider
 }
 
   if(exposing == false) {
     // enable optocoupler
     digitalWrite(CAMERA_PIN, HIGH);
-    // delay(50); for debugging purposes only
-    digitalWrite(CAMERA_PIN, LOW);
+    // set state 'high' for the pulse statement
+    state = HIGH;
     time  = millis();
     exposing = true;
-  } 
+  }
+  // The circuit needs to be closed for about 100 milliseconds so the camera has time to react
+  // pulse length (how long the circuit is closed), example: interval 2 sec, time range 0,1-9,9s, length 2000 ms / 10 = 200 ms
+  else if ( millis() - time > interval / divi && state == HIGH && exposing == true)
+  {
+   digitalWrite(CAMERA_PIN, LOW);
+   state = LOW;
+  }
   else if ( millis() - time > interval && exposing == true) 
   {
    exposing = false;
