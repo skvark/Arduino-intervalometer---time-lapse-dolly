@@ -4,7 +4,7 @@
 #define CAMERA_PIN 13
 // "exposing" or not, if false, sends pulse to the optocoupler which triggers the camera
 bool exposing = false;
-int c,s,t,r,e,b,f = 0;
+int c,s,t,r,e,b = 0;
 int interval;
 int state;
 int divi;
