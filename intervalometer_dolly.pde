@@ -4,7 +4,7 @@
 #define CAMERA_PIN 13
 // "exposing" or not, if false, sends pulse to the optocoupler which triggers the camera
 bool exposing = false;
-int c,s,t,r,e,b = 0;
+int c,s,t,r,e,b,f = 0;
 int interval;
 int state;
 int divi;
@@ -246,7 +246,7 @@ c=analogRead(pin);
   if (c>500)
   {
   delay(250); // if not set, value will increment as long as the button was pressed and we don't want that to happen (about 100-200 ms)
-  b++; // this is the second digit button
+  b++;
   }
   if (b < 10) { // can't show numbers bigger than 9
   return b;
@@ -265,7 +265,7 @@ c=analogRead(pin);
 if (c>190 && c<220)
   {
   delay(250); // if not set, value will increment as long as the button was pressed and we don't want that to happen (about 100-200 ms)
-  e++; // this is the first digit button
+  e++;
   }
   if (e < 10) { // can't show numbers bigger than 9
   return e;
@@ -342,11 +342,11 @@ r = resetButton(5); // reset (and stop)
 
    showdigit(e);
    digitalWrite(11, HIGH);
-   delay(0.1);
+   delay(1);              // 1 ms delay absolute maximum without resistors
    digitalWrite(11, LOW);
    showdigit(b);
    digitalWrite(10, HIGH);
-   delay(0.1);
+   delay(1);              // 1 ms delay absolute maximum without resistors
    digitalWrite(10, LOW);
    
 // if start button is set to 1 (pressed once), the intervalometer will start
@@ -372,14 +372,16 @@ divi = 20;                    // pulse length divider
     time  = millis();
     exposing = true;
   }
+  
   // The circuit needs to be closed for about 100 milliseconds so the camera has time to react
   // pulse length (how long the circuit is closed), example: interval 2 sec, time range 0,1-9,9s, length 2000 ms / 10 = 200 ms
-  else if ( millis() - time > interval / divi && state == HIGH && exposing == true)
+  
+  else if ( millis() - time >= interval / divi && state == HIGH && exposing == true)
   {
    digitalWrite(CAMERA_PIN, LOW);
    state = LOW;
   }
-  else if ( millis() - time > interval && exposing == true) 
+  else if ( millis() - time >= interval && exposing == true) 
   {
    exposing = false;
   }
