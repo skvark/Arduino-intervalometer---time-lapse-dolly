@@ -7,10 +7,27 @@ Current status
 
 - the intervalometer code works just fine on my breadboard prototype :)
 
-Hardware needed
+Hardware:
 
-- Coming later...
-- Wiring diagrams coming soon...
+- Arduino Uno
+- Adafruit motor shield (only if dolly is used)
+- some kind of prototyping circuit board or a breadboard
+- 7 segment 2-digit LED display (common cathode or anode)
+- motor (type and more info to come when I start to build the dolly)
+- dolly materials, coming later...
+
+Components
+
+- 5 pushbuttons
+- 6 x 2,2 kohm resistors (for 5 buttons, system works with other resistors too but code needs to be changed)
+- 1 x 500-600 ohm resistor
+- 1 x 4N35 optocoupler (I suppose 4N25 etc. will work fine too)
+- wire to connect in camera, most of the cameras use 2,5mm 
+- wire
+
+Tools
+
+- soldering equipment
 
 Videos
 
