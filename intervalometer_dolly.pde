@@ -4,8 +4,10 @@
 #define CAMERA_PIN 13
 // "exposing" or not, if false, sends pulse to the optocoupler which triggers the camera
 bool exposing = false;
-int c,s,p,r,e,b = 0;
+int c,s,t,r,e,b = 0;
 int interval;
+int state;
+int divi;
 unsigned long time = 0;
 
 // These pins are for an common anode 2-digit 7 segment display in multiplexing mode (9 pins, 7 cathodes and 2 common anodes)
@@ -22,21 +24,21 @@ void setup()
 
 {
 
-pinMode(10, OUTPUT);  // common anode digit 2
-pinMode(11, OUTPUT);  // common anode digit 1
+pinMode(10, OUTPUT); // common anode digit 2
+pinMode(11, OUTPUT); // common anode digit 1
 
 // segments http://www.kingbrightusa.com/images/catalog/SPEC/DA04-11EWA.pdf
 
-pinMode(2, OUTPUT);   // segment A
-pinMode(3, OUTPUT);   // segment F
-pinMode(14, OUTPUT);  // segment B
-pinMode(15, OUTPUT);  // segment G
-pinMode(16, OUTPUT);  // segment C
-pinMode(17, OUTPUT);  // segment E
-pinMode(18, OUTPUT);  // segment D
+pinMode(2, OUTPUT); // segment A
+pinMode(3, OUTPUT); // segment F
+pinMode(14, OUTPUT); // segment B
+pinMode(15, OUTPUT); // segment G
+pinMode(16, OUTPUT); // segment C
+pinMode(17, OUTPUT); // segment E
+pinMode(18, OUTPUT); // segment D
 
-pinMode(A5, INPUT);   // pin for the buttons
-pinMode(CAMERA_PIN, OUTPUT);  // to the optocoupler
+pinMode(A5, INPUT); // pin for the buttons
+pinMode(CAMERA_PIN, OUTPUT); // to the optocoupler
 
 }
 
@@ -222,6 +224,8 @@ break;
 // 2,2 kohm resistors were used between 5 buttons
 // More info: http://tronixstuff.wordpress.com/2011/01/11/tutorial-using-analog-input-for-multiple-buttons/
 
+// Reset
+
 int resetButton(int pin) {
   
 c=analogRead(pin);
@@ -233,6 +237,8 @@ if (c<180 && c>100)
 return r;
 }
 
+// digit 2 value control
+
 int dig2Button(int pin) {
   
 c=analogRead(pin);
@@ -240,7 +246,7 @@ c=analogRead(pin);
   if (c>500)
   {
   delay(250); // if not set, value will increment as long as the button was pressed and we don't want that to happen (about 100-200 ms)
-  b++; // this is the second digit button
+  b++;
   }
   if (b < 10) { // can't show numbers bigger than 9
   return b;
@@ -250,6 +256,8 @@ c=analogRead(pin);
   }
 }
 
+// digit 1 value control
+
 int dig1Button(int pin) {
    
 c=analogRead(pin);
@@ -257,7 +265,7 @@ c=analogRead(pin);
 if (c>190 && c<220)
   {
   delay(250); // if not set, value will increment as long as the button was pressed and we don't want that to happen (about 100-200 ms)
-  e++; // this is the first digit button
+  e++;
   }
   if (e < 10) { // can't show numbers bigger than 9
   return e;
@@ -265,31 +273,45 @@ if (c>190 && c<220)
   else { // if value goes over 9, automatic reset will occur
   r=1;
   }
+  
 }
+
+// Start & stop
 
 int startButton(int pin) {
   
 c=analogRead(pin);
 
 if (c>330 && c<350) {
-  
-s=1; // start button
-
+  delay(250); // if not set, value will increment as long as the button was pressed and we don't want that to happen (about 100-200 ms)
+  s++;
+  }
+  if (s <= 1) {
+  return s;
+  }
+  else if (s > 1) { // stop
+  return s=0;
+  }
 }
-return s;
-}
 
-int stopButton(int pin) {
+// select time range, default (0) is 0,0 - 9,9 seconds, (1) is 0-99 seconds
+
+int timingButton(int pin) {
   
 c=analogRead(pin);
 
-if (c>240 && c<270)
+if (c>240 && c<270) {
+  delay(250); // if not set, value will increment as long as the button was pressed and we don't want that to happen (about 100-200 ms)
+  t++;
+  }
+  if (t <= 1) {
+  return t;
+  }
+  else if (t > 1) {
+  return t=0;
+  }
+}
 
-{
-p=1; // stop button
-}
-return p;
-}
 
 // This is where the magic happens
 
@@ -299,8 +321,8 @@ void loop() {
   
 if (r == 1 ) {
 
-digitalWrite(CAMERA_PIN, LOW);  // just making sure that program will not cause infinite exposuring
-p = 0;
+digitalWrite(CAMERA_PIN, LOW);
+t = 0;
 s = 0;
 r = 0;
 b = 0;
@@ -312,53 +334,56 @@ e = 0;
 
 b = dig2Button(5); // second digit
 e = dig1Button(5); // first digit
-s = startButton(5);  // start
+s = startButton(5); // start
+t = timingButton(5); // time range
 r = resetButton(5); // reset (and stop)
 
 // Multiplexing the led display
 
    showdigit(e);
    digitalWrite(11, HIGH);
-   delay(0.1);
+   delay(1); // 1 ms delay absolute maximum without resistors
    digitalWrite(11, LOW);
    showdigit(b);
    digitalWrite(10, HIGH);
-   delay(0.1);
+   delay(1); // 1 ms delay absolute maximum without resistors
    digitalWrite(10, LOW);
    
 // if start button is set to 1 (pressed once), the intervalometer will start
 
 if (s == 1) {
 
-p = stopButton(5);  // stop
+// These statements control the interval times
 
-// Pressing the stop button does not reset interval values, just pauses everything and resets the start and stop values
-  
-if (p == 1 ) {
-
-digitalWrite(CAMERA_PIN, LOW); // just making sure that program will not cause infinite exposuring
-p = 0;
-s = 0;
-  
+if (t == 0) {
+interval = e*1000 + b*100; // turning the display values into milliseconds, max value being 9900 ms (9,9 seconds)
+divi = 10; // pulse length divider
+}
+else if (t == 1) {
+interval = e*10000 + b*1000; // full seconds, values from 0 to 99 seconds accepted
+divi = 20; // pulse length divider
 }
 
-// These statements control the interval time
-
-interval = e*1000 + b*100;  // turning the display values into milliseconds, max value being 9900 ms (9,9 seconds)
-// interval = e*10000 + b*1000 comment the line above and uncomment this to use full seconds, values from 0 to 99 seconds accepted
-
   if(exposing == false) {
-      // enable optocoupler
+    // enable optocoupler
     digitalWrite(CAMERA_PIN, HIGH);
-    delay(50);
-    digitalWrite(CAMERA_PIN, LOW);
-    time  = millis();
+    // set state 'high' for the pulse statement
+    state = HIGH;
+    time = millis();
     exposing = true;
-  } 
-  else if ( millis() - time > interval && exposing == true) 
+  }
+  
+  // The circuit needs to be closed for about 100 milliseconds so the camera has time to react
+  // pulse length (how long the circuit is closed), example: interval 2 sec, time range 0,1-9,9s, length 2000 ms / 10 = 200 ms
+  
+  else if ( millis() - time >= interval / divi && state == HIGH && exposing == true)
+  {
+   digitalWrite(CAMERA_PIN, LOW);
+   state = LOW;
+  }
+  else if ( millis() - time >= interval && exposing == true)
   {
    exposing = false;
   }
 }
-
 }
