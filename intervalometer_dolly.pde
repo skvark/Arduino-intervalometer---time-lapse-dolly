@@ -21,7 +21,7 @@ int pin5 = 16;
 int pin6 = 17;
 int pin7 = 18;
 
-AF_DCMotor motor(2, MOTOR12_64KHZ);
+AF_DCMotor motor(1, MOTOR12_64KHZ);
 
 void setup()
 
