@@ -5,7 +5,7 @@
 #define CAMERA_PIN 13
 // "exposing" or not, if false, sends pulse to the optocoupler which triggers the camera
 bool exposing = false;
-int c,s,t,r,e,b = 0;
+int c,s,t,r,e,b,m = 0;
 int interval;
 int state;
 int divi;
@@ -317,6 +317,20 @@ if (c>240 && c<270) {
   }
 }
 
+// switch for choosing motor behavior: if on, motor moves without pauses, if off motor pauses when pic is taken
+
+int motorSwitch(int pin) {
+  
+c=digitalRead(pin);
+
+if (c == HIGH) {
+  return 1;
+  }
+else {
+  return 0;
+  }
+}
+
 
 // This is where the magic happens
 
@@ -342,6 +356,7 @@ e = dig1Button(5); // first digit
 s = startButton(5); // start
 t = timingButton(5); // time range
 r = resetButton(5); // reset (and stop)
+m = motorSwitch(); // pin to be decided later
 
 // Multiplexing the led display
 
@@ -357,21 +372,28 @@ r = resetButton(5); // reset (and stop)
 // if start button is set to 1 (pressed once), the intervalometer will start
 
 if (s == 1) {
-  
- motor.run(FORWARD); // starts the dolly movement
+
+if (m == 1) {
+motor.run(FORWARD); // starts the dolly movement when in continuous movement mode
+}
 
 // These statements control the interval times
 
 if (t == 0) {
-interval = e*1000 + b*100; // turning the display values into milliseconds, max value being 9900 ms (9,9 seconds)
-divi = 10; // pulse length divider
-}
+	interval = e*1000 + b*100; // turning the display values into milliseconds, max value being 9900 ms (9,9 seconds)
+	divi = 10; // pulse length divider
+	}
 else if (t == 1) {
-interval = e*10000 + b*1000; // full seconds, values from 0 to 99 seconds accepted
-divi = 20; // pulse length divider
-}
+	interval = e*10000 + b*1000; // full seconds, values from 0 to 99 seconds accepted
+	divi = 20; // pulse length divider
+	}
 
-  if(exposing == false) {
+if(exposing == false) {
+  
+    // shut motor down if option chosen
+	if (m == 0) {
+	motor.run(RELEASE); // stops the dolly movement
+	}
     // enable optocoupler
     digitalWrite(CAMERA_PIN, HIGH);
     // set state 'high' for the pulse statement
@@ -383,14 +405,16 @@ divi = 20; // pulse length divider
   // The circuit needs to be closed for about 100 milliseconds so the camera has time to react
   // pulse length (how long the circuit is closed), example: interval 2 sec, time range 0,1-9,9s, length 2000 ms / 10 = 200 ms
   
-  else if ( millis() - time >= interval / divi && state == HIGH && exposing == true)
-  {
-   digitalWrite(CAMERA_PIN, LOW);
-   state = LOW;
-  }
-  else if ( millis() - time >= interval && exposing == true)
-  {
-   exposing = false;
-  }
+else if ( millis() - time >= interval / divi && state == HIGH && exposing == true)
+	{
+	digitalWrite(CAMERA_PIN, LOW);
+	state = LOW;
+	if (m == 0) {
+	motor.run(FORWARD);
+	}
+else if ( millis() - time >= interval && exposing == true)
+	{
+	exposing = false;
+	}
 }
 }
