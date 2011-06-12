@@ -33,7 +33,7 @@ I bought some of the stuff from http://servocity.com/
 - 6 x 2,2 kohm resistors (for 5 buttons, system works with other resistors too but code needs to be changed)
 - 1 x 500-600 ohm resistor
 - 1 x 4N35 optocoupler (I suppose 4N25 etc. will work fine too)
-- optionally 74HC164N shift register(s) for LED display(s) to free pins
+- optionally 74HC595N shift register(s) for LED display(s) to free pins
 - wire to connect in camera, most of the cameras use 2,5mm
 - wire
 
