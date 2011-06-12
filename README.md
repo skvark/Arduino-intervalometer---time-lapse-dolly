@@ -18,7 +18,6 @@ This is an Arduino based project. The goal is to create simple yet usable interv
 ### Dolly materials
 
 - wood (any wood should work fine)
-
 - shafts
 - gears and gear racks
 - 1 rpm motor
