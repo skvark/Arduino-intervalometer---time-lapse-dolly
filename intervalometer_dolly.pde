@@ -1,5 +1,6 @@
 // Intervalometer and dolly motor controller
-
+// AFMotor library
+#include <AFMotor.h>
 // pin that will trigger the camera
 #define CAMERA_PIN 13
 // "exposing" or not, if false, sends pulse to the optocoupler which triggers the camera
@@ -20,6 +21,8 @@ int pin5 = 16;
 int pin6 = 17;
 int pin7 = 18;
 
+AF_DCMotor motor(2, MOTOR12_64KHZ);
+
 void setup()
 
 {
@@ -39,6 +42,8 @@ pinMode(18, OUTPUT); // segment D
 
 pinMode(A5, INPUT); // pin for the buttons
 pinMode(CAMERA_PIN, OUTPUT); // to the optocoupler
+
+motor.setSpeed(255); // motor speed 0-255
 
 }
 
@@ -352,6 +357,8 @@ r = resetButton(5); // reset (and stop)
 // if start button is set to 1 (pressed once), the intervalometer will start
 
 if (s == 1) {
+  
+ motor.run(FORWARD); // starts the dolly movement
 
 // These statements control the interval times
 
