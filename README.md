@@ -5,8 +5,8 @@ This is an Arduino based project. The goal is to create simple yet usable interv
 
 ### Current status
 
-- I soldered the intervalometer parts into a pcb breadboard couple of days ago, works just fine
-- I'm currently engineering the dolly, this may take some time...
+- I have soldered the intervalometer parts into a pcb breadboard, works just fine
+- I'm currently engineering the dolly and waiting some parts to ship from USA
 
 ### Hardware
 
@@ -29,7 +29,7 @@ I bought some of the stuff from http://servocity.com/
 
 ### Components
 
-- 5 pushbuttons
+- at least 5 pushbuttons
 - 1-2 switches
 - 6 x 2,2 kohm resistors (for 5 buttons, system works with other resistors too but code needs to be changed)
 - 1 x 500-600 ohm resistor
