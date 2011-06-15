@@ -58,6 +58,9 @@ pinMode(18, OUTPUT); // segment D
 
 pinMode(A5, INPUT); // pin for the buttons
 pinMode(CAMERA_PIN, OUTPUT); // to the optocoupler
+pinMode(latchPin, OUTPUT);
+pinMode(clockPin, OUTPUT);
+pinMode(dataPin, OUTPUT);
 
 motor.setSpeed(255); // motor speed 0-255
 
@@ -391,6 +394,17 @@ m = motorSwitch(); // pin to be decided later
    digitalWrite(10, LOW);
    
 */
+
+// The shiftout for the 74HC595's and displays
+
+digitalWrite(latchPin, LOW);
+shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[b]);
+shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[e]);
+/* coming later
+shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[]); // motor speed
+shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[]); // pause time
+*/
+digitalWrite(latchPin, HIGH);
    
 // if start button is set to 1 (pressed once), the intervalometer will start
 
