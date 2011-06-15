@@ -40,11 +40,11 @@ void setup()
 
 {
 
-pinMode(9, OUTPUT); // common anode digit 2
-pinMode(10, OUTPUT); // common anode digit 1
-
 // segments http://www.kingbrightusa.com/images/catalog/SPEC/DA04-11EWA.pdf
 /* If 74HC595 is used, comment the lines
+
+pinMode(9, OUTPUT); // common anode digit 2
+pinMode(10, OUTPUT); // common anode digit 1
 
 pinMode(2, OUTPUT); // segment A
 pinMode(3, OUTPUT); // segment F
@@ -398,8 +398,8 @@ m = motorSwitch(); // pin to be decided later
 // The shiftout for the 74HC595's and displays
 
 digitalWrite(latchPin, LOW);
-shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[b]);
-shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[e]);
+shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[e]); // time, first digit
+shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[b]); // time, second digit
 /* coming later
 shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[]); // motor speed
 shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[]); // pause time
