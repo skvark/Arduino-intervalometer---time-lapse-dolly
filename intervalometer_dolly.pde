@@ -1,5 +1,6 @@
 // Intervalometer and dolly motor controller
-
+// Olli-Pekka Heinisuo 2011
+// Licensed under MIT license, see LICENSE.txt
 
 // AFMotor library
 #include <AFMotor.h>
