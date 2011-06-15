@@ -83,10 +83,10 @@ const byte ledCharSet[138] = {
 	// Error animation for 2 digit 7 segment display, digit1 (129-133)
 	
 	B01001111, B01000110, B01000110, B01111110,	// ERRO
-	B01000110,									// R
+	B01000110,	// R
 	
 	// Error animation for 2 digit 7 segment display, digit2 (134-137)
 	
 	B01000110, B01000110, B01111110, B01000110, // RROR
-	B01001111									// E
+	B01001111	// E
 };

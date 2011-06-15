@@ -1,6 +1,11 @@
 // Intervalometer and dolly motor controller
+
+
 // AFMotor library
 #include <AFMotor.h>
+// library for 7 segment displays using 74HC595 shift register
+#include <LED7Segment.h>
+
 // pin that will trigger the camera
 #define CAMERA_PIN 13
 // "exposing" or not, if false, sends pulse to the optocoupler which triggers the camera
