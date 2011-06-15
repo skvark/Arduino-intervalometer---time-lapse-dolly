@@ -46,7 +46,7 @@ I bought some of the stuff from http://servocity.com/
 - First intervalometer prototype running version 0.1 code: http://www.youtube.com/watch?v=Y-RKiF_JtFg
 - Second prototype on PCB: http://www.youtube.com/watch?v=gI8r_mp4LpY
 
-License: MIT License,  see https://github.com/skvark/Arduino-intervalometer---time-lapse-dolly/blob/master/LICENSE.txt 
+License: MIT License, see http://github.com/skvark/Arduino-intervalometer---time-lapse-dolly/blob/master/LICENSE.txt     
 author: Olli-Pekka Heinisuo 
 www: http://unknownpixels.com 
 email: o-p@unknownpixels.com 

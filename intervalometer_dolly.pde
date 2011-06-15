@@ -18,6 +18,7 @@ int divi;
 unsigned long time = 0;
 
 // These pins are for an common anode 2-digit 7 segment display in multiplexing mode (9 pins, 7 cathodes and 2 common anodes)
+/* If 74HC595 is used, comment the lines
 
 int pin1 = 2;
 int pin2 = 3;
@@ -27,16 +28,23 @@ int pin5 = 16;
 int pin6 = 17;
 int pin7 = 18;
 
+*/
+
+const int latchPin = 9; // connected to ST_CP of 74HC595
+const int clockPin = 12; // connected to SH_CP of 74HC595
+const int dataPin = 10; // connected to DS of 74HC595
+
 AF_DCMotor motor(1, MOTOR12_64KHZ);
 
 void setup()
 
 {
 
-pinMode(10, OUTPUT); // common anode digit 2
-pinMode(11, OUTPUT); // common anode digit 1
+pinMode(9, OUTPUT); // common anode digit 2
+pinMode(10, OUTPUT); // common anode digit 1
 
 // segments http://www.kingbrightusa.com/images/catalog/SPEC/DA04-11EWA.pdf
+/* If 74HC595 is used, comment the lines
 
 pinMode(2, OUTPUT); // segment A
 pinMode(3, OUTPUT); // segment F
@@ -45,6 +53,8 @@ pinMode(15, OUTPUT); // segment G
 pinMode(16, OUTPUT); // segment C
 pinMode(17, OUTPUT); // segment E
 pinMode(18, OUTPUT); // segment D
+
+*/
 
 pinMode(A5, INPUT); // pin for the buttons
 pinMode(CAMERA_PIN, OUTPUT); // to the optocoupler
@@ -55,6 +65,8 @@ motor.setSpeed(255); // motor speed 0-255
 
 // digits for the LED display, if a common cathode display is used I suppose the code needs some changes
 // there's no resistors used, because I believe the leds will withstand the current because of multiplexing which also decreases the brightness for about 50%
+// if 74HC595's are used, comment these lines and use resistors with the displays
+/*
 
 void digit0 () {
 
@@ -231,6 +243,8 @@ break;
 
 }
 
+*/
+
 // These functions return a value when the corresponding button is pressed
 // 2,2 kohm resistors were used between 5 buttons
 // More info: http://tronixstuff.wordpress.com/2011/01/11/tutorial-using-analog-input-for-multiple-buttons/
@@ -365,6 +379,7 @@ r = resetButton(5); // reset (and stop)
 m = motorSwitch(); // pin to be decided later
 
 // Multiplexing the led display
+/* if 74HC595's are used, comment these lines
 
    showdigit(e);
    digitalWrite(11, HIGH);
@@ -374,6 +389,8 @@ m = motorSwitch(); // pin to be decided later
    digitalWrite(10, HIGH);
    delay(1); // 1 ms delay absolute maximum without resistors
    digitalWrite(10, LOW);
+   
+*/
    
 // if start button is set to 1 (pressed once), the intervalometer will start
 
