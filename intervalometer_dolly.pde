@@ -58,10 +58,13 @@ motor.setSpeed(255); // motor speed 0-255
 }
 
 // These functions return a value when the corresponding button is pressed
-// 2,2 kohm resistors were used between 5 buttons
+// 1,8 kohm resistors were used between 6 buttons (7 resistors)
 // More info: http://tronixstuff.wordpress.com/2011/01/11/tutorial-using-analog-input-for-multiple-buttons/
+//
+// Switches:
+// 1 kohm resistors were used with 2 switches, total 6 resistors
 
-// Reset
+// Reset button
 
 int resetButton(int pin) {
   
