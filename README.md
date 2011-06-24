@@ -28,12 +28,13 @@ I bought some of the stuff from http://servocity.com/
 
 ### Components
 
-- at least 5 pushbuttons
-- 1-2 switches
-- 6 x 2,2 kohm resistors (for 5 buttons, system works with other resistors too but code needs to be changed)
+- at least 6 pushbuttons
+- 2 switches and 6 resistors, about 2 kohm
+- 7 x 2,2 kohm resistors (for 6 buttons, system works with other resistors too but code needs to be changed)
 - 1 x 500-600 ohm resistor
+- 32 x 220-300 ohm resistors
 - 1 x 4N35 optocoupler (I suppose 4N25 etc. will work fine too)
-- optionally 74HC595N shift register(s) for LED display(s) to free pins
+- 74HC595N shift register(s) for LED display(s) to free pins, one for each digit (default 4)
 - wire to connect in camera, most of the cameras use 2,5mm
 - wire
 
