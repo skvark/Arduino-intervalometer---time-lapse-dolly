@@ -5,23 +5,32 @@
 // AFMotor library
 #include <AFMotor.h>
 // library for 7 segment displays using 74HC595 shift register
-#include <LED7Segment.h>
+// #include <LED7Segment.h>
 // Function library for multiplexing one common anode 2 digit 7 segment display, uncomment if used
 // #include <CAnodeMultiplexed.h>
+// LCD library
+#include <LiquidCrystal.h>
+// Correct pins to be decided later...
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 // pin that will trigger the camera
 #define CAMERA_PIN 13
+
 // "exposing" or not, if false, sends pulse to the optocoupler which triggers the camera
 bool exposing = false;
+
 int c,s,t,r,e,b,m,n,p = 0;
+int counter = 0;
 int interval;
 int state;
 int divi;
 unsigned long time = 0;
 
+/* These are for shift registers if used
 const int latchPin = 9; // connected to ST_CP of 74HC595
 const int clockPin = 12; // connected to SH_CP of 74HC595
 const int dataPin = 10; // connected to DS of 74HC595
+*/
 
 AF_DCMotor motor(1, MOTOR12_64KHZ);
 
@@ -30,7 +39,7 @@ void setup()
 {
 
 // segments http://www.kingbrightusa.com/images/catalog/SPEC/DA04-11EWA.pdf
-/* If 74HC595 is used, comment the lines
+/* Common anode 7 segment display multiplexing pins
 
 pinMode(9, OUTPUT); // common anode digit 2
 pinMode(10, OUTPUT); // common anode digit 1
@@ -45,15 +54,23 @@ pinMode(18, OUTPUT); // segment D
 
 */
 
-pinMode(A5, INPUT); // pin for the buttons
+pinMode(A5, INPUT); // pins for the buttons
 pinMode(A4, INPUT);
 pinMode(A3, INPUT);
 pinMode(CAMERA_PIN, OUTPUT); // to the optocoupler
+
+/* For shift registers
 pinMode(latchPin, OUTPUT);
 pinMode(clockPin, OUTPUT);
 pinMode(dataPin, OUTPUT);
+*/
+
+// Motor speed, function coming later...
 
 motor.setSpeed(255); // motor speed 0-255
+
+// set up the LCD's number of columns and rows:
+lcd.begin(16, 2);
 
 }
 
@@ -92,7 +109,7 @@ if (c>160 && c<180)
   return e;
   }
   else { // if value goes over 9, automatic reset will occur
-  return e=1;
+  return e=0;
   }
   
 }
@@ -112,7 +129,7 @@ c=analogRead(pin);
   return b;
   }
   else { // if value goes over 9, automatic reset will occur
-  return b=1;
+  return b=0;
   }
 }
 
@@ -131,7 +148,7 @@ if (c>330 && c<370)
   return n;
   }
   else { // if value goes over 9, automatic reset will occur
-  return n=1;
+  return n=0;
   }
   
 }
@@ -184,6 +201,9 @@ if (c>450 && c < 550) {
   return t=1;
   }
   else if (c < 450 && c>300) {
+  return t=0;
+  }
+  else if (c == 0) {
   return t=2;
   }
   else {
@@ -198,13 +218,16 @@ int motorSwitch(int pin) {
 c=analogRead(pin);
 
 if (c>450 && c < 550) {
-  return t=1;
+  return m=1;
   }
   else if (c < 450 && c>300) {
-  return t=2;
+  return m=0;
+  }
+  else if (c == 0) {
+  return m=2;
   }
   else {
-  return t=0;
+  return m=0;
   }
 }
 
@@ -224,7 +247,9 @@ b = 0;
 e = 0;
 p = 0;
 n = 0;
-
+m = 0;
+counter = 0;
+lcd.clear();
 }
 
 // constantly updating the values enables the possibility to modify interval time on the fly
@@ -237,6 +262,7 @@ s = startButton(5); // start
 r = resetButton(5); // reset (and stop)
 t = timingButton(4); // time range
 m = motorSwitch(3); // pause / continuous mode
+
 
 // Multiplexing the led display
 /* if 74HC595's are used, comment these lines
@@ -253,15 +279,85 @@ m = motorSwitch(3); // pause / continuous mode
 */
 
 // The shiftout for the 74HC595's and displays
-
+/*
 digitalWrite(latchPin, LOW);
-shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[n]); // motor speed
-shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[p]); // pause time
-shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[e]); // time, first digit
-shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[b]); // time, second digit
+shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[4]); // motor speed
+shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[4]); // pause time
+shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[4]); // time, first digit
+shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[4]); // time, second digit
 digitalWrite(latchPin, HIGH);
-   
-// if start button is set to 1 (pressed once), the intervalometer will start
+*/
+
+// These are for LCD-display, type 16x2
+
+// Interval
+
+if (t == 0) {
+lcd.setCursor(0, 0);
+lcd.print("Int:");
+lcd.setCursor(4, 0);
+lcd.print(e);
+lcd.setCursor(5, 0);
+lcd.print(",");
+lcd.setCursor(6, 0);
+lcd.print(b);
+}
+else if ( t == 1) {
+lcd.setCursor(0, 0);
+lcd.print("Int:");
+lcd.setCursor(4, 0);
+lcd.print(e);
+lcd.setCursor(5, 0);
+lcd.print(b);
+lcd.setCursor(6, 0);
+lcd.print("s");
+}
+
+// Time range
+
+lcd.setCursor(8, 0);
+lcd.print("R:");
+lcd.setCursor(10, 0);
+if (t == 0) {
+lcd.print("n");  // normal
+}
+else if (t == 1) {
+lcd.print("e");  // extended
+}
+
+// Motor speed
+
+lcd.setCursor(12, 0);
+lcd.print("Ms:");
+lcd.setCursor(15, 0);
+lcd.print(n);
+
+// Pause time if pause mode on
+
+lcd.setCursor(0, 1);
+lcd.print("Pt:");
+lcd.setCursor(3, 1);
+lcd.print(p);
+
+// Mode
+
+lcd.setCursor(5, 1);
+lcd.print("M:");
+lcd.setCursor(7, 1);
+if (m == 0) {
+lcd.print("c");  // continuous
+}
+else if (m == 1) {
+lcd.print("p");  // pause
+}
+
+// Picture counter
+
+lcd.setCursor(9, 1);
+lcd.print("No:");
+lcd.setCursor(12, 1);
+lcd.print(counter);
+
 
 if (s == 1) {
 
@@ -294,7 +390,7 @@ if (exposing == false) {
     state = HIGH;
     time = millis();
     exposing = true; 
-    
+    counter++;  // counter, if LCD is in use
     }
   
   // The circuit needs to be closed for about 100 milliseconds so the camera has time to react
