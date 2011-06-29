@@ -13,7 +13,12 @@ This is an Arduino based project. The goal is to create simple yet usable interv
 - Arduino Uno
 - Adafruit motor shield (only if dolly is used)
 - some kind of prototyping circuit board or a breadboard
-- 2 x 7 segment 2-digit LED display (common cathode or anode, I recommend common cathode)
+- 2 x 7 segment 2-digit LED display (common cathode or anode, I recommend common cathode... anyway, you have to solder very much with this option)  
+OR  
+- LCD-display, at least 16x2 with Hitachi HD44780 chipset (easiest and fastest method but most expensive)
+OR  
+- 7 segment display (very limited functionality) 
+
 
 ### Dolly materials
 
@@ -35,8 +40,9 @@ I bought some of the stuff from http://servocity.com/
 - 32 x 220-300 ohm resistors
 - 1 x 4N35 optocoupler (I suppose 4N25 etc. will work fine too)
 - 74HC595N shift register(s) for LED display(s) to free pins, one for each digit (default 4)
-- optionally 4 leds 
-- wire to connect in camera, most of the cameras use 2,5mm
+- If you want to use LCD-display, buy at least 16x2
+- optionally 4 leds, I'm not using these
+- wire to connect in camera, most of the cameras use 2,5mm (expensive models have N3-connector)
 - wire
 
 ### Tools
