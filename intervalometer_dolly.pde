@@ -23,6 +23,7 @@ int speed[] = {75, 95, 115, 135, 155, 175, 195, 215, 235, 255};
 
 int c,s,t,r,e,b,m,p = 0;
 int n = 9;
+int pause;
 int counter = 0;
 int interval;
 int state;
