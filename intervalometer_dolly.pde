@@ -10,16 +10,19 @@
 // #include <CAnodeMultiplexed.h>
 // LCD library
 #include <LiquidCrystal.h>
-// Correct pins to be decided later...
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+// These pins are not used by Adafruit motor shield if it's using only motor 1
+LiquidCrystal lcd(10, 9, 5, 3, 2, 14);
 
 // pin that will trigger the camera
 #define CAMERA_PIN 13
 
 // "exposing" or not, if false, sends pulse to the optocoupler which triggers the camera
 bool exposing = false;
+// motor speed, increments by 20
+int speed[] = {75, 95, 115, 135, 155, 175, 195, 215, 235, 255};
 
-int c,s,t,r,e,b,m,n,p = 0;
+int c,s,t,r,e,b,m,p = 0;
+int n = 9;
 int counter = 0;
 int interval;
 int state;
@@ -54,6 +57,7 @@ pinMode(18, OUTPUT); // segment D
 
 */
 
+pinMode(14, OUTPUT);
 pinMode(A5, INPUT); // pins for the buttons
 pinMode(A4, INPUT);
 pinMode(A3, INPUT);
@@ -64,10 +68,6 @@ pinMode(latchPin, OUTPUT);
 pinMode(clockPin, OUTPUT);
 pinMode(dataPin, OUTPUT);
 */
-
-// Motor speed, function coming later...
-
-motor.setSpeed(255); // motor speed 0-255
 
 // set up the LCD's number of columns and rows:
 lcd.begin(16, 2);
@@ -133,7 +133,7 @@ c=analogRead(pin);
   }
 }
 
-// digit 3 value control
+// digit 3 value control = motor speed
 
 int dig3Button(int pin) {
    
@@ -145,15 +145,15 @@ if (c>330 && c<370)
   n++;
   }
   if (n < 10) { // can't show numbers bigger than 9
-  return n;
+  return speed[n];
   }
   else { // if value goes over 9, automatic reset will occur
-  return n=0;
+  return speed[9];
   }
   
 }
 
-// digit 4 value control
+// digit 4 value control = pause time
 
 int dig4Button(int pin) {
    
@@ -256,8 +256,8 @@ lcd.clear();
 
 e = dig1Button(5); // first digit
 b = dig2Button(5); // second digit
-n = dig3Button(5); // third digit
-p = dig4Button(5); // fourth digit
+n = dig3Button(5); // third digit, motor speed
+p = dig4Button(5); // fourth digit, pause time
 s = startButton(5); // start
 r = resetButton(5); // reset (and stop)
 t = timingButton(4); // time range
@@ -358,6 +358,9 @@ lcd.print("No:");
 lcd.setCursor(12, 1);
 lcd.print(counter);
 
+// Set the motor speed, 0 slowest and 9 fastest
+
+motor.setSpeed(n);
 
 if (s == 1) {
 
@@ -369,10 +372,12 @@ motor.run(FORWARD); // starts the dolly movement when in continuous movement mod
 
 if (t == 0) {
 	interval = e*1000 + b*100; // turning the display values into milliseconds, max value being 9900 ms (9,9 seconds)
+        pause = p*100;  // pause time, equivalent to exposure time
 	divi = 10; // pulse length divider
 	}
 else if (t == 1) {
 	interval = e*10000 + b*1000; // full seconds, values from 0 to 99 seconds accepted
+        pause = p*1000;  // pause time, equivalent to exposure time
 	divi = 20; // pulse length divider
 	}
 
@@ -401,12 +406,22 @@ else if ( millis() - time >= interval / divi && state == HIGH && exposing == tru
   
 	digitalWrite(CAMERA_PIN, LOW);
 	state = LOW;
+
+        }
+        
+// pause time ends, starts the dolly movement again (if mode in use)
+
+else if ( millis() - time >= pause && exposing == true)
+	{
         
 	if (m == 0) {
 	motor.run(FORWARD); 
 	}
 
         }
+
+// sets the exposing flag to false when interval time has passed
+   
 else if ( millis() - time >= interval && exposing == true)
 	{
 	exposing = false; 
