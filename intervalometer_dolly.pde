@@ -57,7 +57,7 @@ pinMode(18, OUTPUT); // segment D
 
 */
 
-pinMode(14, OUTPUT);
+pinMode(13, OUTPUT);
 pinMode(A5, INPUT); // pins for the buttons
 pinMode(A4, INPUT);
 pinMode(A3, INPUT);
