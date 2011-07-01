@@ -145,10 +145,10 @@ if (c>330 && c<370)
   n++;
   }
   if (n < 10) { // can't show numbers bigger than 9
-  return speed[n];
+  return n;
   }
   else { // if value goes over 9, automatic reset will occur
-  return speed[9];
+  return n=0;
   }
   
 }
@@ -360,7 +360,7 @@ lcd.print(counter);
 
 // Set the motor speed, 0 slowest and 9 fastest
 
-motor.setSpeed(n);
+motor.setSpeed(speed[n]);
 
 if (s == 1) {
 
