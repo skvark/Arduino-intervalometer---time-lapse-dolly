@@ -29,6 +29,7 @@ int interval;
 int state;
 int divi;
 unsigned long time = 0;
+int mot;
 
 /* These are for shift registers if used
 const int latchPin = 9; // connected to ST_CP of 74HC595
@@ -94,6 +95,21 @@ if (c<160 && c>100)
   }
 return r;
 }
+
+/* coming later, sensor buttons for dolly
+
+int shutDown(int pin) {
+  
+c=analogRead(pin);
+
+if (c< && c>)
+  {
+  r = 1; // stop&reset to prevent any damage
+  }
+return r;
+}
+
+*/
 
 // digit 1 value control
 
@@ -247,10 +263,11 @@ r = 0;
 b = 0;
 e = 0;
 p = 0;
-n = 0;
+n = 9;
 m = 0;
 counter = 0;
 lcd.clear();
+motor.run(RELEASE);
 }
 
 // constantly updating the values enables the possibility to modify interval time on the fly
@@ -346,10 +363,10 @@ lcd.setCursor(5, 1);
 lcd.print("M:");
 lcd.setCursor(7, 1);
 if (m == 0) {
-lcd.print("c");  // continuous
+lcd.print("p");  // continuous
 }
 else if (m == 1) {
-lcd.print("p");  // pause
+lcd.print("c");  // pause
 }
 
 // Picture counter
@@ -386,8 +403,9 @@ if (exposing == false) {
   
     // shut motor down if option chosen
     
-    if (m == 0) {
+    if (m == 0 && mot == 1) {
     motor.run(RELEASE); // stops the dolly movement
+    mot = 0;
     }
     
     // enable optocoupler
@@ -412,14 +430,13 @@ else if ( millis() - time >= interval / divi && state == HIGH && exposing == tru
         
 // pause time ends, starts the dolly movement again (if mode in use)
 
-else if ( millis() - time >= pause && exposing == true)
-	{
+else if ( millis() - time >= pause && exposing == true && mot == 0)
+{
         
-	if (m == 0) {
-	motor.run(FORWARD); 
-	}
+motor.run(FORWARD);
+mot = 1;
 
-        }
+}
 
 // sets the exposing flag to false when interval time has passed
    
@@ -427,6 +444,10 @@ else if ( millis() - time >= interval && exposing == true)
 	{
 	exposing = false; 
 	}
+}
+
+else {
+motor.run(RELEASE);
 }
 
 }
