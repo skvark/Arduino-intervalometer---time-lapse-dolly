@@ -18,7 +18,10 @@ LiquidCrystal lcd(10, 9, 5, 3, 2, 14);
 
 // "exposing" or not, if false, sends pulse to the optocoupler which triggers the camera
 bool exposing = false;
+
 // motor speed, increments by 20
+// no "zero" speed, because it can cause DC gearmotor to stall 
+// -> max current passes trough it, if no fuse is used the motor can suffer damage
 int speed[] = {75, 95, 115, 135, 155, 175, 195, 215, 235, 255};
 
 int c,s,t,r,e,b,m,p = 0;
@@ -210,7 +213,7 @@ if (c>500 && c<600) {
 
 // select time range, default (0) is 0,0 - 9,9 seconds, (1) is 0-99 seconds
 
-int timingButton(int pin) {
+int timingSwitch(int pin) {
   
 c=analogRead(pin);
 
@@ -263,6 +266,7 @@ r = 0;
 b = 0;
 e = 0;
 p = 0;
+// default speed is 9 (maximum)
 n = 9;
 m = 0;
 counter = 0;
@@ -278,7 +282,7 @@ n = dig3Button(5); // third digit, motor speed
 p = dig4Button(5); // fourth digit, pause time
 s = startButton(5); // start
 r = resetButton(5); // reset (and stop)
-t = timingButton(4); // time range
+t = timingSwitch(4); // time range
 m = motorSwitch(3); // pause / continuous mode
 
 
@@ -363,10 +367,10 @@ lcd.setCursor(5, 1);
 lcd.print("M:");
 lcd.setCursor(7, 1);
 if (m == 0) {
-lcd.print("p");  // continuous
+lcd.print("p");  // pause
 }
 else if (m == 1) {
-lcd.print("c");  // pause
+lcd.print("c");  // continuous
 }
 
 // Picture counter
@@ -377,6 +381,7 @@ lcd.setCursor(12, 1);
 lcd.print(counter);
 
 // Set the motor speed, 0 slowest and 9 fastest
+// depends on motor type and supplied voltage
 
 motor.setSpeed(speed[n]);
 
@@ -426,28 +431,31 @@ else if ( millis() - time >= interval / divi && state == HIGH && exposing == tru
 	digitalWrite(CAMERA_PIN, LOW);
 	state = LOW;
 
-        }
+    }
         
-// pause time ends, starts the dolly movement again (if mode in use)
+	// pause time ends, starts the dolly movement again (if mode in use)
 
 else if ( millis() - time >= pause && exposing == true && mot == 0)
-{
+	{
         
-motor.run(FORWARD);
-mot = 1;
+	motor.run(FORWARD);
+	mot = 1;
 
-}
+	}
 
-// sets the exposing flag to false when interval time has passed
+	// sets the exposing flag to false when interval time has passed
    
 else if ( millis() - time >= interval && exposing == true)
 	{
 	exposing = false; 
 	}
+	
 }
 
+// force motor shutdown to prevent any damage
+
 else {
-motor.run(RELEASE);
-}
+	 motor.run(RELEASE);
+	 }
 
 }
