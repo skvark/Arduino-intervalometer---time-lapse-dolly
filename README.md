@@ -15,7 +15,8 @@ This is an Arduino based project. The goal is to create simple yet usable interv
 
 - [First intervalometer prototype running version 0.1 code](http://www.youtube.com/watch?v=Y-RKiF_JtFg)
 - [Second prototype on PCB](http://www.youtube.com/watch?v=gI8r_mp4LpY)
-- [Third (not a prototype anymore: wooden panel, two displays, assembly done etc.) version](http://www.youtube.com/watch?v=fYHESAnv7hY)  
+- [Third (not a prototype anymore: wooden panel, two displays, assembly done etc.) version](http://www.youtube.com/watch?v=fYHESAnv7hY)   
+- [Fourth (first dolly video, still under construction) version](http://www.youtube.com/watch?v=RujWRubhIhQ)  
 
 License: [MIT License](http://github.com/skvark/Arduino-intervalometer---time-lapse-dolly/blob/master/LICENSE.txt)  
 author: Olli-Pekka Heinisuo    
