@@ -9,7 +9,7 @@ This is an Arduino based project. The goal is to create simple yet usable interv
 
 ### Current status
 
-- I'm currently engineering/building the dolly
+- Writing documentation, may take some time. Dolly is finished and working.
 
 ### Videos
 
@@ -17,6 +17,8 @@ This is an Arduino based project. The goal is to create simple yet usable interv
 - [Second prototype on PCB](http://www.youtube.com/watch?v=gI8r_mp4LpY)
 - [Third (not a prototype anymore: wooden panel, two displays, assembly done etc.) version](http://www.youtube.com/watch?v=fYHESAnv7hY)   
 - [Fourth (first dolly video, still under construction) version](http://www.youtube.com/watch?v=RujWRubhIhQ)  
+- [Making of the Dolly, some parts from the beginning of the construction](http://www.youtube.com/watch?v=W47prWIrEkQ) 
+- [First field test :D](http://www.youtube.com/watch?v=vPX1zAryRDE)    
 
 License: [MIT License](http://github.com/skvark/Arduino-intervalometer---time-lapse-dolly/blob/master/LICENSE.txt)  
 author: Olli-Pekka Heinisuo    
