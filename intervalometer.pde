@@ -185,38 +185,17 @@ int timingSwitch(int pin) {
 c=analogRead(pin);
 
 if (c>450 && c < 550) {
-  return t=1;
+  delay(250);
+  t++;
   }
-  else if (c < 450 && c>300) {
-  return t=0;
+  else if (t <= 1) {
+  return t;
   }
-  else if (c == 0) {
-  return t=2;
-  }
-  else {
+  else if (t > 1){
   return t=0;
   }
 }
 
-// switch for choosing motor behavior: if on, motor moves without pauses, if off motor pauses when pic is taken
-
-int motorSwitch(int pin) {
-
-c=analogRead(pin);
-
-if (c>450 && c < 550) {
-  return m=1;
-  }
-  else if (c < 450 && c>300) {
-  return m=0;
-  }
-  else if (c == 0) {
-  return m=2;
-  }
-  else {
-  return m=0;
-  }
-}
 
 // This is where the magic happens
 
