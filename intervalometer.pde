@@ -120,46 +120,6 @@ c=analogRead(pin);
   }
 }
 
-// digit 3 value control = motor speed
-
-int dig3Button(int pin) {
-   
-c=analogRead(pin);
-
-if (c>330 && c<370)
-  {
-  delay(250); // if not set, value will increment as long as the button was pressed and we don't want that to happen (about 100-200 ms)
-  n++;
-  }
-  if (n < 10) { // can't show numbers bigger than 9
-  return n;
-  }
-  else { // if value goes over 9, automatic reset will occur
-  return n=0;
-  }
-  
-}
-
-// digit 4 value control = pause time
-
-int dig4Button(int pin) {
-   
-c=analogRead(pin);
-
-if (c>240 && c<270)
-  {
-  delay(250); // if not set, value will increment as long as the button was pressed and we don't want that to happen (about 100-200 ms)
-  p++;
-  }
-  if (p < 10) { // can't show numbers bigger than 9
-  return p;
-  }
-  else { // if value goes over 9, automatic reset will occur
-  return p=0;
-  }
-  
-}
-
 // Start & stop
 
 int startButton(int pin) {
@@ -222,12 +182,9 @@ counter = 0;
 
 e = dig1Button(5); // first digit
 b = dig2Button(5); // second digit
-n = dig3Button(5); // third digit, motor speed
-p = dig4Button(5); // fourth digit, pause time
 s = startButton(5); // start
 r = resetButton(5); // reset (and stop)
-t = timingSwitch(4); // time range
-m = motorSwitch(3); // pause / continuous mode
+t = timingSwitch(5); // time range
 
 
 // Multiplexing the led display
