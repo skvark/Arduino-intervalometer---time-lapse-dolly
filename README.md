@@ -5,7 +5,8 @@ This is an Arduino based project. The goal was to create simple yet usable inter
 
 **Please read the wiki**, it's contains all the detailed information about components, costs etc.
 
-[WIKI](https://github.com/skvark/Arduino-intervalometer---time-lapse-dolly/wiki)
+**[WIKI](https://github.com/skvark/Arduino-intervalometer---time-lapse-dolly/wiki)**    
+Blog post about this project in English: [Arduino based DIY time-lapse dolly / intervalometer](http://unknownpixels.com/blogi.php?kategoria=english&id=138)     
 
 ### Current status
 
