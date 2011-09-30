@@ -1,13 +1,10 @@
 // Intervalometer and dolly motor controller
 // Olli-Pekka Heinisuo 2011
 // Licensed under MIT license, see LICENSE.txt
+// This is experimental version, change to master if you want normal version
 
 // AFMotor library
 #include <AFMotor.h>
-// library for 7 segment displays using 74HC595 shift register
-// #include <LED7Segment.h>
-// Function library for multiplexing one common anode 2 digit 7 segment display, uncomment if used
-// #include <CAnodeMultiplexed.h>
 // LCD library
 #include <LiquidCrystal.h>
 // These pins are not used by Adafruit motor shield if it's using only motor 1
@@ -34,45 +31,17 @@ int divi;
 unsigned long time = 0;
 int mot;
 
-/* These are for shift registers if used
-const int latchPin = 9; // connected to ST_CP of 74HC595
-const int clockPin = 12; // connected to SH_CP of 74HC595
-const int dataPin = 10; // connected to DS of 74HC595
-*/
-
 AF_DCMotor motor(1, MOTOR12_64KHZ);
 
 void setup()
 
 {
 
-// segments http://www.kingbrightusa.com/images/catalog/SPEC/DA04-11EWA.pdf
-/* Common anode 7 segment display multiplexing pins
-
-pinMode(9, OUTPUT); // common anode digit 2
-pinMode(10, OUTPUT); // common anode digit 1
-
-pinMode(2, OUTPUT); // segment A
-pinMode(3, OUTPUT); // segment F
-pinMode(14, OUTPUT); // segment B
-pinMode(15, OUTPUT); // segment G
-pinMode(16, OUTPUT); // segment C
-pinMode(17, OUTPUT); // segment E
-pinMode(18, OUTPUT); // segment D
-
-*/
-
 pinMode(13, OUTPUT);
 pinMode(A5, INPUT); // pins for the buttons
 pinMode(A4, INPUT);
 pinMode(A3, INPUT);
 pinMode(CAMERA_PIN, OUTPUT); // to the optocoupler
-
-/* For shift registers
-pinMode(latchPin, OUTPUT);
-pinMode(clockPin, OUTPUT);
-pinMode(dataPin, OUTPUT);
-*/
 
 // set up the LCD's number of columns and rows:
 lcd.begin(16, 2);
@@ -284,31 +253,6 @@ s = startButton(5); // start
 r = resetButton(5); // reset (and stop)
 t = timingSwitch(4); // time range
 m = motorSwitch(3); // pause / continuous mode
-
-
-// Multiplexing the led display
-/* if 74HC595's are used, comment these lines
-
-   showdigit(e);
-   digitalWrite(11, HIGH);
-   delay(1); // 1 ms delay absolute maximum without resistors
-   digitalWrite(11, LOW);
-   showdigit(b);
-   digitalWrite(10, HIGH);
-   delay(1); // 1 ms delay absolute maximum without resistors
-   digitalWrite(10, LOW);
-   
-*/
-
-// The shiftout for the 74HC595's and displays
-/*
-digitalWrite(latchPin, LOW);
-shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[4]); // motor speed
-shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[4]); // pause time
-shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[4]); // time, first digit
-shiftOut(dataPin, clockPin, LSBFIRST, ledCharSet[4]); // time, second digit
-digitalWrite(latchPin, HIGH);
-*/
 
 // These are for LCD-display, type 16x2
 
