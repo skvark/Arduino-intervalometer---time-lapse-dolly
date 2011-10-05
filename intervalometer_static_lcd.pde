@@ -269,7 +269,7 @@ lcd.print(counter);
 
 if (s == 1) {
 
-interval = e*1000; // full seconds, values from 0 to 999 seconds accepted
+interval = e*1000; // full seconds, values from 0 to 999 seconds accepted 
 exposure = n*1000;
 
 if (exposing == false) {
